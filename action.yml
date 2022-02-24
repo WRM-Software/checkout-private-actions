@@ -1,0 +1,35 @@
+name: "Checkout Private Actions"
+description: "Checkout Private Actions"
+
+inputs:
+  repository: 
+    description: "e.g. org/your-private-action@v1.9"
+    required: true
+  ref: 
+    default: ""
+  repository: 
+    required: true
+  token:
+    required: true
+  path: 
+    description: "Checkout path"
+    default: "./private-actions"
+    
+runs:
+  using: "composite"
+  steps:
+
+  - name: Starting Checkout Private Actions
+    uses: actions/checkout@v2
+    with:
+      repository: ${{ inputs.repository }}
+      ref: ${{ inputs.ref }}
+      token: ${{ inputs.token }}
+      path: ${{ inputs.path }}
+
+  - name: Get Private Actions Version
+    run: |
+      cd ${{ inputs.path }} \
+        && VERSION=$(git tag --points-at HEAD) \
+        && echo "Using ${{ inputs.repository }}@$VERSION"
+    shell: bash
